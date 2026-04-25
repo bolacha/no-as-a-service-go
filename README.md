@@ -28,11 +28,11 @@ Built for humans, excuses, and humor.
 
 **Base URL**
 ```
-https://naas.isalman.dev/no
+https://noass.bolacha.dev/no
 ```
 
 **Method:** `GET`  
-**Rate Limit:** `120 requests per minute per IP`
+**Rate Limit:** `NO`
 
 ### 🔄 Example Request
 ```http
@@ -56,7 +56,7 @@ Want to run it yourself? It’s a single binary with zero external dependencies.
 
 ### Requirements
 
-- [Go 1.22+](https://go.dev/dl/)
+- [Go 1.22+](https://go.dev/dl/) (Railway builder uses 1.24)
 
 ### 1. Clone this repository
 ```bash
