@@ -187,7 +187,8 @@ Here are some projects and websites that creatively integrate [no-as-a-service](
 
 ## 👤 Author
 
-Created with creative stubbornness by [hotheadhacker](https://github.com/hotheadhacker)
+Go implementation by [bolacha](https://github.com/bolacha)  
+Based on the original [no-as-a-service](https://github.com/hotheadhacker/no-as-a-service) by [hotheadhacker](https://github.com/hotheadhacker)
 
 ---
 
