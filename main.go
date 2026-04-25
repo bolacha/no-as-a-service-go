@@ -18,6 +18,9 @@ var indexHTML string
 //go:embed reasons.json
 var reasonsJSON []byte
 
+//go:embed favicon.svg
+var faviconSVG []byte
+
 var (
 	reasons   []string
 	indexTmpl = template.Must(template.New("index").Parse(indexHTML))
@@ -103,6 +106,12 @@ func main() {
 	}
 
 	mux := http.NewServeMux()
+
+	mux.HandleFunc("GET /favicon.svg", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "image/svg+xml")
+		w.Header().Set("Cache-Control", "public, max-age=86400")
+		w.Write(faviconSVG)
+	})
 
 	mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/" {
