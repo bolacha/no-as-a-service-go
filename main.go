@@ -21,6 +21,9 @@ var reasonsJSON []byte
 //go:embed favicon.svg
 var faviconSVG []byte
 
+//go:embed apple-touch-icon.png
+var appleTouchIcon []byte
+
 var (
 	reasons   []string
 	indexTmpl = template.Must(template.New("index").Parse(indexHTML))
@@ -111,6 +114,12 @@ func main() {
 		w.Header().Set("Content-Type", "image/svg+xml")
 		w.Header().Set("Cache-Control", "public, max-age=86400")
 		w.Write(faviconSVG)
+	})
+
+	mux.HandleFunc("GET /apple-touch-icon.png", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "image/png")
+		w.Header().Set("Cache-Control", "public, max-age=86400")
+		w.Write(appleTouchIcon)
 	})
 
 	mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
