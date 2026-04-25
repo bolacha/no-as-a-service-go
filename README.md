@@ -32,7 +32,7 @@ https://noass.bolacha.dev/no
 ```
 
 **Method:** `GET`  
-**Rate Limit:** `NO`
+**Rate Limit:** `120 requests per 10 seconds per IP` (enforced via Cloudflare)
 
 ### 🔄 Example Request
 ```http
