@@ -1,11 +1,12 @@
 {
-  "image": "docker.io/node:22-alpine",
+  "image": "docker.io/golang:1.24-alpine",
   "mounts": [
     "type=bind,source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/root/.ssh"
   ],
   "customizations": {
     "vscode": {
       "extensions": [
+        "golang.go"
       ]
     }
   },
@@ -14,8 +15,5 @@
     "ghcr.io/cirolosapio/devcontainers-features/alpine-git:0": {}
   },
   "forwardPorts": [3000],
-  "shutdownAction": "stopContainer",
-  "containerEnv": {
-    "NODE_ENV": "development"
-  }
+  "shutdownAction": "stopContainer"
 }

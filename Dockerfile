@@ -1,11 +1,12 @@
-FROM docker.io/node:22-alpine
-ENV NODE_ENV=production
-
+FROM golang:1.24-alpine AS builder
 WORKDIR /app
-COPY package*.json ./
-RUN npm install --omit=dev && npm cache clean --force
+COPY go.mod ./
+RUN go mod download
 COPY . .
-USER node
-EXPOSE 3000
+RUN CGO_ENABLED=0 go build -o no-as-a-service .
 
-CMD ["npm", "start"]
+FROM scratch
+COPY --from=builder /app/no-as-a-service /no-as-a-service
+COPY --from=builder /app/reasons.json /reasons.json
+EXPOSE 3000
+ENTRYPOINT ["/no-as-a-service"]

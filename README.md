@@ -52,22 +52,22 @@ Use it in apps, bots, landing pages, Slack integrations, rejection letters, or w
 
 ## 🛠️ Self-Hosting
 
-Want to run it yourself? It’s lightweight and simple.
+Want to run it yourself? It’s a single binary with zero external dependencies.
+
+### Requirements
+
+- [Go 1.22+](https://go.dev/dl/)
 
 ### 1. Clone this repository
 ```bash
-git clone https://github.com/hotheadhacker/no-as-a-service.git
-cd no-as-a-service
+git clone https://github.com/bolacha/no-as-a-service-go.git
+cd no-as-a-service-go
 ```
 
-### 2. Install dependencies
+### 2. Build and run
 ```bash
-npm install
-```
-
-### 3. Start the server
-```bash
-npm start
+go build -o no-as-a-service .
+./no-as-a-service
 ```
 
 The API will be live at:
@@ -77,7 +77,13 @@ http://localhost:3000/no
 
 You can also change the port using an environment variable:
 ```bash
-PORT=5000 npm start
+PORT=5000 ./no-as-a-service
+```
+
+### Docker
+```bash
+docker build -t no-as-a-service .
+docker run -p 3000:3000 no-as-a-service
 ```
 
 ---
@@ -85,36 +91,13 @@ PORT=5000 npm start
 ## 📁 Project Structure
 
 ```
-no-as-service/
-├── index.js            # Express API
+no-as-a-service-go/
+├── main.go             # Go HTTP server (zero external dependencies)
 ├── reasons.json        # 1000+ universal rejection reasons
-├── package.json
-├── .devcontainer.json  # VS Code / Github devcontainer setup
+├── go.mod
+├── Dockerfile          # Multi-stage build — final image uses scratch
+├── .devcontainer.json  # VS Code / GitHub Codespaces setup
 └── README.md
-```
-
----
-
-## 📦 package.json
-
-For reference, here’s the package config:
-
-```json
-{
-  "name": "no-as-service",
-  "version": "1.0.0",
-  "description": "A lightweight API that returns random rejection or no reasons.",
-  "main": "index.js",
-  "scripts": {
-    "start": "node index.js"
-  },
-  "author": "hotheadhacker",
-  "license": "MIT",
-  "dependencies": {
-    "express": "^4.18.2",
-    "express-rate-limit": "^7.0.0"
-  }
-}
 ```
 
 ---
@@ -128,10 +111,13 @@ If you open this repo in Github Codespaces, it will automatically use `.devconta
 
 Here are some projects and websites that creatively integrate [no-as-a-service](https://naas.isalman.dev/no) to deliver humorous or programmatic "no" responses:
 
-1. **[no-as-a-service-rust](https://github.com/ZAZPRO/no-as-a-service-rust)**  
+1. **[no-as-a-service-go](https://github.com/bolacha/no-as-a-service-go)**  
+   Go implementation of this project — zero external dependencies, single binary, scratch Docker image.
+
+2. **[no-as-a-service-rust](https://github.com/ZAZPRO/no-as-a-service-rust)**  
    Rust implementation of this project.
 
-2. **[CSG Admins](https://csg-admins.de)**  
+3. **[CSG Admins](https://csg-admins.de)**  
    A system administration and gaming service hub using no-as-a-service to provide playful negative responses across some admin panels and commands.
 
 3. **[FunnyAnswers - /no endpoint](https://www.funnyanswers.lol/no)**  
