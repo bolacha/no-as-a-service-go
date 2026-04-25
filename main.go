@@ -1,7 +1,9 @@
 package main
 
 import (
+	_ "embed"
 	"encoding/json"
+	"html/template"
 	"log"
 	"math/rand/v2"
 	"net/http"
@@ -10,7 +12,16 @@ import (
 	"time"
 )
 
-var reasons []string
+//go:embed index.html
+var indexHTML string
+
+//go:embed reasons.json
+var reasonsJSON []byte
+
+var (
+	reasons   []string
+	indexTmpl = template.Must(template.New("index").Parse(indexHTML))
+)
 
 type response struct {
 	Reason string `json:"reason"`
@@ -20,15 +31,14 @@ type errorResponse struct {
 	Error string `json:"error"`
 }
 
-// per-IP rate limiter: 120 req/min
 type rateLimiter struct {
 	mu      sync.Mutex
 	buckets map[string]*bucket
 }
 
 type bucket struct {
-	count    int
-	resetAt  time.Time
+	count   int
+	resetAt time.Time
 }
 
 func newRateLimiter() *rateLimiter {
@@ -77,12 +87,12 @@ func clientIP(r *http.Request) string {
 	return r.RemoteAddr
 }
 
+func randomReason() string {
+	return reasons[rand.IntN(len(reasons))]
+}
+
 func main() {
-	data, err := os.ReadFile("reasons.json")
-	if err != nil {
-		log.Fatalf("failed to load reasons.json: %v", err)
-	}
-	if err := json.Unmarshal(data, &reasons); err != nil {
+	if err := json.Unmarshal(reasonsJSON, &reasons); err != nil {
 		log.Fatalf("failed to parse reasons.json: %v", err)
 	}
 
@@ -93,6 +103,18 @@ func main() {
 	}
 
 	mux := http.NewServeMux()
+
+	mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/" {
+			http.NotFound(w, r)
+			return
+		}
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		if err := indexTmpl.Execute(w, struct{ Reason string }{randomReason()}); err != nil {
+			http.Error(w, "internal error", http.StatusInternalServerError)
+		}
+	})
+
 	mux.HandleFunc("GET /no", func(w http.ResponseWriter, r *http.Request) {
 		ip := clientIP(r)
 		w.Header().Set("Content-Type", "application/json")
@@ -104,7 +126,7 @@ func main() {
 			return
 		}
 
-		json.NewEncoder(w).Encode(response{Reason: reasons[rand.IntN(len(reasons))]})
+		json.NewEncoder(w).Encode(response{Reason: randomReason()})
 	})
 
 	mux.HandleFunc("OPTIONS /no", func(w http.ResponseWriter, r *http.Request) {

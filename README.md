@@ -10,6 +10,8 @@ This tiny API returns random, generic, creative, and sometimes hilarious rejecti
 
 Built for humans, excuses, and humor.
 
+🌐 **Live site:** [noass.bolacha.dev](https://noaas.bolacha.dev)
+
 <!-- GitAds Sponsorship Badge -->
 <p align="center">
   <a href="https://docs.gitads.dev/">
@@ -28,7 +30,7 @@ Built for humans, excuses, and humor.
 
 **Base URL**
 ```
-https://noass.bolacha.dev/no
+https://noaas.bolacha.dev/no
 ```
 
 **Method:** `GET`  
@@ -93,12 +95,29 @@ docker run -p 3000:3000 no-as-a-service
 ```
 no-as-a-service-go/
 ├── main.go             # Go HTTP server (zero external dependencies)
-├── reasons.json        # 1000+ universal rejection reasons
+├── index.html          # SSR page template (embedded into binary at build time)
+├── reasons.json        # 1000+ universal rejection reasons (embedded into binary at build time)
 ├── go.mod
 ├── Dockerfile          # Multi-stage build — final image uses scratch
 ├── .devcontainer.json  # VS Code / GitHub Codespaces setup
 └── README.md
 ```
+
+---
+
+## 🌐 Website
+
+The live site at [noass.bolacha.dev](https://noass.bolacha.dev) serves a server-rendered HTML page — every visit picks a random reason and injects it into the page before it's sent to the browser.
+
+**How it works:**
+
+- `GET /` renders `index.html` server-side using Go's stdlib `html/template`
+- `{{.Reason}}` placeholders in the template are replaced with a random reason on each request
+- Both `index.html` and `reasons.json` are **embedded into the binary** at build time via `//go:embed` — no files needed at runtime
+- Open Graph and Twitter meta tags are also populated server-side, so sharing a link shows the reason in previews
+- The "Get Another No" button simply reloads the page, which triggers a new server-side render
+
+No JavaScript frameworks, no build step, no external dependencies.
 
 ---
 

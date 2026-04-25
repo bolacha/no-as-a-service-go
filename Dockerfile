@@ -7,6 +7,5 @@ RUN CGO_ENABLED=0 go build -o no-as-a-service .
 
 FROM scratch
 COPY --from=builder /app/no-as-a-service /no-as-a-service
-COPY --from=builder /app/reasons.json /reasons.json
 EXPOSE 3000
 ENTRYPOINT ["/no-as-a-service"]
